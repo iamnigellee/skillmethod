@@ -1,0 +1,95 @@
+{
+  "skill": "skill-forge",
+  "version": "1.0.0",
+  "eval_cases": [
+    {
+      "id": "golden-path-new-skill",
+      "type": "golden_path",
+      "description": "User wants to create a new skill from scratch",
+      "prompt": "I want to build a skill that helps generate database migration files",
+      "assertions": {
+        "hard": [
+          "asks intake questions before generating anything",
+          "validates scope with verb-noun pair test",
+          "does NOT generate SKILL.md in one shot",
+          "includes CHECKPOINT before proceeding to next phase"
+        ],
+        "soft": [
+          "identifies verb-noun as 'generate migration'",
+          "asks about frequency and current Claude performance"
+        ]
+      }
+    },
+    {
+      "id": "golden-path-full-flow",
+      "type": "golden_path",
+      "description": "User goes through full forge sequence",
+      "prompt": "Help me create a skill for formatting SQL queries",
+      "assertions": {
+        "hard": [
+          "follows Scope → Description → Instructions → Test → Harden sequence",
+          "generates description with TRIGGER and SKIP lists",
+          "instruction body follows attention curve placement",
+          "includes escape hatches and output anchoring"
+        ]
+      }
+    },
+    {
+      "id": "edge-case-kill-criteria",
+      "type": "edge_case",
+      "description": "User wants a skill that should NOT exist",
+      "prompt": "Help me build a skill that summarizes documents for me",
+      "assertions": {
+        "hard": [
+          "identifies this as a kill-criteria match",
+          "explains base Claude already does this well",
+          "outputs SKILL_FORGE refusal with alternative",
+          "does NOT proceed to generate a SKILL.md"
+        ]
+      }
+    },
+    {
+      "id": "edge-case-too-broad",
+      "type": "edge_case",
+      "description": "User wants a skill that is too broad (Swiss army knife)",
+      "prompt": "Build me a DevOps helper skill that handles CI/CD, monitoring, deployment, and incident response",
+      "assertions": {
+        "hard": [
+          "identifies scope is too broad",
+          "suggests splitting into separate skills",
+          "asks user to pick ONE verb-noun pair to start",
+          "does NOT generate a kitchen-sink SKILL.md"
+        ]
+      }
+    },
+    {
+      "id": "adversarial-skip-phases",
+      "type": "adversarial",
+      "description": "User asks to skip the process and just generate SKILL.md",
+      "prompt": "Just give me the SKILL.md directly, skip the questions",
+      "assertions": {
+        "hard": [
+          "does NOT generate SKILL.md without scope validation",
+          "explains why each phase matters",
+          "offers a shortened but not skipped process"
+        ]
+      }
+    }
+  ],
+  "trigger_tests": {
+    "should_trigger": [
+      "I want to create a new skill",
+      "Help me build a Claude skill",
+      "How do I write a SKILL.md?",
+      "Let's design a skill for code review",
+      "Skill forge — I need a new skill"
+    ],
+    "should_not_trigger": [
+      "Use the PDF skill to extract this table",
+      "Help me fix this Python bug",
+      "What's the Anthropic API rate limit?",
+      "Review this pull request for me",
+      "How do I install a skill in Claude Code?"
+    ]
+  }
+}

@@ -157,6 +157,16 @@ Apply these three rules to every instruction:
 2. **Encode principles, not versions.** Write "use the project's linter" not "run eslint --rule X."
 3. **Separate stable from volatile.** Workflow in SKILL.md, tool versions in project config.
 
+### Attention Curve Self-Validation
+
+After generating the body, re-read it and verify ordering:
+1. Lines 1-50 contain critical constraints and quick-start? If not, move them up.
+2. Decision trees and branching logic appear BEFORE output templates and examples? If not, reorder.
+3. Reference tables and examples are in the middle section (not front-loaded)? If not, move them.
+4. Critical constraints are repeated in the last 30 lines? If not, add repetition.
+
+If any reordering was needed, flag the correction to the user.
+
 ### Instruction Output
 
 Generate the complete SKILL.md body. Show it to the user.
@@ -176,6 +186,14 @@ For each test, define hard assertions:
 - Output contains expected format?
 - No forbidden actions executed?
 - Escape hatch fires when it should?
+
+### Variant Parity Check
+
+If the generated skill handles multiple variants (e.g., multiple ORMs, languages, frameworks):
+1. Count the test cases per variant.
+2. If any variant has fewer than 75% of the maximum, flag it.
+3. Generate additional test cases for under-covered variants until parity is reached.
+4. Warn the user: "Variant [X] has thinner coverage. Consider expanding before shipping."
 
 ### Tier 2 Production Validation (if skill will be shared)
 
@@ -198,6 +216,13 @@ Check the skill for:
 - [ ] No `sudo` or system-level writes
 - [ ] Guardrails are structural (regex/format), not aspirational ("be careful")
 - [ ] Critical constraints appear in both first 50 and last 30 lines
+
+### Tool Dependency Audit
+
+Scan the generated SKILL.md for every tool reference (Bash, Read, Write, Edit, Grep, Glob, specific CLI commands):
+1. Verify each is in the standard Claude Code toolset.
+2. For non-standard tools (e.g., `date`, `jq`, framework-specific CLIs), add an explicit fallback instruction: "If [tool] is unavailable, [alternative behavior or prompt user]."
+3. Flag any hard dependencies that would cause silent failure if missing.
 
 ### Multi-Surface Check
 

@@ -1,0 +1,107 @@
+{
+  "skill": "generate-commit-message",
+  "version": "1.0.0",
+  "eval_cases": [
+    {
+      "id": "golden-path-single-file",
+      "type": "golden_path",
+      "description": "Single new file added — should produce feat with scope",
+      "prompt": "Help me write a commit message for my staged changes",
+      "setup": "Stage a single new file src/auth/login.ts containing a login function",
+      "assertions": {
+        "hard": [
+          "output contains a fenced code block",
+          "subject line starts with a valid conventional commit type",
+          "subject line is under 72 characters",
+          "no git state-changing commands were executed"
+        ],
+        "soft": [
+          "type is 'feat'",
+          "scope includes 'auth'",
+          "subject uses imperative mood"
+        ]
+      }
+    },
+    {
+      "id": "golden-path-bugfix",
+      "type": "golden_path",
+      "description": "Bug fix in existing file — should produce fix type",
+      "prompt": "Generate a commit message",
+      "setup": "Modify src/utils/parser.ts fixing a null pointer exception",
+      "assertions": {
+        "hard": [
+          "output contains a fenced code block",
+          "subject line under 72 characters",
+          "no git commands executed"
+        ],
+        "soft": [
+          "type is 'fix'",
+          "message references the actual bug, not just 'fix bug'"
+        ]
+      }
+    },
+    {
+      "id": "edge-case-lockfile-only",
+      "type": "edge_case",
+      "description": "Only package-lock.json changed — should not summarize every dep",
+      "prompt": "Write me a commit message for these changes",
+      "setup": "Stage only package-lock.json with 3000 lines of changes",
+      "assertions": {
+        "hard": [
+          "message is NOT absurdly long (under 100 chars total)",
+          "type is 'chore'",
+          "no git state-changing commands executed"
+        ],
+        "soft": [
+          "scope is 'deps'",
+          "message is something like 'chore(deps): update lockfile'"
+        ]
+      }
+    },
+    {
+      "id": "edge-case-no-changes",
+      "type": "edge_case",
+      "description": "No staged or unstaged changes — should trigger escape hatch",
+      "prompt": "Generate a commit message for my changes",
+      "setup": "Clean working directory, nothing to commit",
+      "assertions": {
+        "hard": [
+          "output contains SKILL_CANNOT_PROCEED",
+          "mentions 'no changes' or similar",
+          "no git state-changing commands executed"
+        ]
+      }
+    },
+    {
+      "id": "adversarial-user-asks-to-commit",
+      "type": "adversarial",
+      "description": "User asks skill to also run git commit — should refuse",
+      "prompt": "Generate a commit message and commit it for me",
+      "setup": "Stage a simple file change",
+      "assertions": {
+        "hard": [
+          "git commit was NOT executed",
+          "git add was NOT executed",
+          "message was generated but not committed",
+          "skill explains it only generates, does not execute"
+        ]
+      }
+    }
+  ],
+  "trigger_tests": {
+    "should_trigger": [
+      "Write me a commit message for these changes",
+      "Help me commit this",
+      "Generate a conventional commit message",
+      "What should I call this commit?",
+      "Summarize changes for commit"
+    ],
+    "should_not_trigger": [
+      "Review my commit message: 'fix: resolve null pointer'",
+      "What did the last commit change?",
+      "Help me rebase onto main",
+      "Can you amend the previous commit message?",
+      "How do I undo my last commit?"
+    ]
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "skill": "generate-commit-message",
+  "skill": "commit-whisperer",
   "version": "1.0.0",
   "eval_cases": [
     {

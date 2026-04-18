@@ -1,18 +1,19 @@
 ---
-name: generate-commit-message
+name: commit-whisperer
 description: >
-  Generates a conventional commit message by analyzing the current git diff,
-  staged changes, and recent commit history to match the repository's existing
-  style. TRIGGER when user asks to write a commit message, draft commit message,
-  help me commit, what should I commit as, generate commit msg, summarize my
-  changes for commit, conventional commit for this diff.
+  The commit whisperer — reads your git diff, staged changes, and recent
+  commit history, then whispers the perfect conventional commit message
+  matching your repository's style.
+  TRIGGER when user asks to write a commit message, draft commit message,
+  help me commit, what should I commit as, generate commit msg, summarize
+  my changes for commit, conventional commit for this diff, commit whisperer.
   SKIP when user already wrote a commit message and wants review or editing.
   SKIP when user asks about git history or understanding past changes.
   SKIP when user wants to amend, squash, or rebase commits.
   SKIP when user wants to execute git commit (this generates the message only).
 ---
 
-# Generate Commit Message
+# Commit Whisperer
 
 ## Critical Constraints
 
